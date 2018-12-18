@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<scenario name="pbxtest">
+<scenario name="https://github.com/willyrgf/test-sip-calls">
 <Global variables="from,to" />
 <send>
     <![CDATA[

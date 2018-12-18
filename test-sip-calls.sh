@@ -98,5 +98,5 @@ done
 # if doesn't exist directory, create
 [[ -d "${LOG_DIR}" ]] || mkdir -p "${LOG_DIR}"
 
-_main || exit 1
+_main || exit $? 
 
