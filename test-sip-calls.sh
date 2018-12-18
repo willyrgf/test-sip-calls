@@ -19,10 +19,10 @@ http://github.com/willyrgf/test-sip-calls
 A tool for check and monitoring SIP channels with real calls.
 
 Use:
-$0 -f <scenario_file.xml> -g <ip_port_gateway> -f <from_did/caller_id> -t <to_did/callee/number> -b <local_ip_bind> <-l> <log_dir>
+$0 -s <scenario_file.xml> -g <ip_port_gateway> -f <from_did/caller_id> -t <to_did/callee/number> -b <local_ip_bind> <-l> <log_dir>
 
 Example:
-$0 -f scenario.xml -g 200.200.200.200:5060 -f 553133336666 -t 5531933336666 -b 10.77.88.99 -l /var/log/test-sip-calls/
+$0 -s scenario.xml -g 200.200.200.200:5060 -f 553133336666 -t 5531933336666 -b 10.77.88.99 -l /var/log/test-sip-calls/
 
 Exit codes:
     0: All calls were successful (200OK + RTP recv/send)
