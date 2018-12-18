@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<scenario name="pbxtest">
+<Global variables="from,to" />
+<send>
+    <![CDATA[
+
+      INVITE sip:[$to]@[remote_ip] SIP/2.0
+      Via: SIP/2.0/[transport] [local_ip]:[local_port]
+      From: sipp <sip:[$from]@[local_ip]:[local_port]>;tag=[call_number]
+      To: [$to] <sip:[$to]@[remote_ip]:[remote_port]>
+      Call-ID: [call_id]
+      Cseq: 1 INVITE
+      Contact: sip:[$from]@[local_ip]:[local_port]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Type: application/sdp
+      Content-Length: [len]
+
+      v=0
+      o=u1 1441277065 1441277066 IN IP[local_ip_type] [local_ip]
+      s=-
+      c=IN IP[media_ip_type] [media_ip]
+      t=0 0
+      m=audio [media_port] RTP/AVP 18 101 13
+      a=rtpmap:18 G729/8000
+      a=fmtp:18 annexb=no
+      a=rtpmap:101 telephone-event/8000
+      a=fmtp:101 0-16
+      a=ptime:20
+      a=sendrecv
+
+
+    ]]>
+</send>
+  <recv response="100" optional="false" rrs="true"/>
+  <!--
+  <recv response="603" optional="true" next="rejected"/>
+  -->
+  <recv response="180" optional="false" rrs="true"/>
+  <recv response="183" optional="true" rrs="true"/>
+  <recv response="200" optional="false" rrs="true"/>
+  <send>
+    <![CDATA[
+      ACK [next_url] SIP/2.0
+      [routes]
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: sipp <sip:[$from]@[local_ip]:[local_port]>;tag=[call_number]
+      To: [$to] <[next_url]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 1 ACK
+      Contact: sip:[$from]@[local_ip]:[local_port]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Length: 0
+
+    ]]>
+  </send>
+
+  <pause milliseconds="5000"/>
+  <send>
+    <![CDATA[
+      BYE [next_url] SIP/2.0
+      [routes]
+      Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch]
+      From: sipp <sip:[$from]@[local_ip]:[local_port]>;tag=[call_number]
+      To: [$to] <[next_url]>[peer_tag_param]
+      Call-ID: [call_id]
+      CSeq: 2 BYE
+      Contact: sip:[$from]@[local_ip]:[local_port]
+      Max-Forwards: 70
+      Subject: Performance Test
+      Content-Length: 0
+
+    ]]>
+  </send>
+  <recv response="200" optional="false"/>
+  <label id="rejected"/>
+</scenario>
+
