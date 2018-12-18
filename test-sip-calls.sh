@@ -109,7 +109,10 @@ while getopts "s:g:f:t:b:l:h?" ARG; do
 done
 
 # sipp is available?
-[[ -f "${SIPP}" ]] || exit 1
+if [[ ! -f "${SIPP}" ]]; then
+  echo "sipp required"
+  exit 1
+fi
 # if doesn't exist directory, create
 [[ -d "${LOG_DIR}" ]] || mkdir -p "${LOG_DIR}"
 
