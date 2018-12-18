@@ -33,9 +33,6 @@
     ]]>
 </send>
   <recv response="100" optional="false" rrs="true"/>
-  <!--
-  <recv response="603" optional="true" next="rejected"/>
-  -->
   <recv response="180" optional="false" rrs="true"/>
   <recv response="183" optional="true" rrs="true"/>
   <recv response="200" optional="false" rrs="true"/>
