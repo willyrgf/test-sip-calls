@@ -58,7 +58,7 @@ _exec_test() {
     -stf "${LOG_DIR}"/"${STATS_LOG}" \
     -trace_screen \
     -screen_file "${LOG_DIR}"/"${SCREEN_LOG}" \
-    -timeout 10s \
+    -timeout 30s \
     -timeout_error \
     &> ${NULL}
 
