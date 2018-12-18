@@ -50,6 +50,8 @@ _remove_pidfile() {
 }
 
 _exec_test() {
+  # -set gateway is used because sipp bug in 3.5.x version on FreeBSD
+  # https://github.com/SIPp/sipp/commit/10b046ce4f40f07f70a9caade6b32317c74926f9
   ${SIPP} \
     "${GATEWAY}" \
     -aa \
@@ -61,6 +63,7 @@ _exec_test() {
     -m 1 \
     -i "${BIND_IP}" \
     -rtp_echo \
+    -set gateway "${GATEWAY}" \
     -set from "${FROM}" \
     -set to "${TO}" \
     -trace_logs \

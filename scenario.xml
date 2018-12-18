@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <scenario name="https://github.com/willyrgf/test-sip-calls">
-<Global variables="from,to" />
+<Global variables="from,to,gateway" />
 <send>
     <![CDATA[
 
-      INVITE sip:[$to]@[remote_ip] SIP/2.0
+      INVITE sip:[$to]@[$gateway] SIP/2.0
       Via: SIP/2.0/[transport] [local_ip]:[local_port]
       From: sipp <sip:[$from]@[local_ip]:[local_port]>;tag=[call_number]
-      To: [$to] <sip:[$to]@[remote_ip]:[remote_port]>
+      To: [$to] <sip:[$to]@[$gateway]:[remote_port]>
       Call-ID: [call_id]
       Cseq: 1 INVITE
       Contact: sip:[$from]@[local_ip]:[local_port]
