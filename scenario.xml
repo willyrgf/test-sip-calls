@@ -33,7 +33,7 @@
     ]]>
 </send>
   <recv response="100" optional="false" rrs="true"/>
-  <recv response="180" optional="false" rrs="true"/>
+  <recv response="180" optional="true" rrs="true"/>
   <recv response="183" optional="true" rrs="true"/>
   <recv response="200" optional="false" rrs="true"/>
   <send>
