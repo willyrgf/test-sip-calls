@@ -3,10 +3,14 @@
 # Set global vairables
 SIPP="$(command -v sipp)"
 NAME="test-sip-calls"
+NULL="/dev/null"
+PID_FILE="/var/run/${NAME}.pid"
+# logs
 TRACE_LOG="${NAME}-trace.log"
 ERROR_LOG="${NAME}-error.log"
 MSG_LOG="${NAME}-msg.log"
 STATS_LOG="${NAME}-stats.log"
+SCREEN_LOG="${NAME}-screen.log"
 
 _help() {
   echo "
@@ -15,6 +19,19 @@ Use: $0 -f <scenario_file.xml> -g <ip_port_gateway> -f <from_did/caller_id> -t <
 Example: $0 -f scenario.xml -g 200.200.200.200:5060 -f 553133336666 -t 5531933336666 -b 10.77.88.99
 "
   exit 255
+}
+
+_check_pidfile() {
+  [[ -f ${PID_FILE} ]] && return 1 || return 0
+}
+
+_create_pidfile() {
+  _check_pidfile || return 1
+  echo $$ > "${PID_FILE}"
+}
+
+_remove_pidfile() {
+  rm -f "${PID_FILE}"
 }
 
 _exec_test() {
@@ -27,7 +44,6 @@ _exec_test() {
     -sf "${SCENARIO}" \
     -l 1 \
     -m 1 \
-    -trace_err \
     -i "${BIND_IP}" \
     -rtp_echo \
     -set from "${FROM}" \
@@ -39,14 +55,26 @@ _exec_test() {
     -trace_msg \
     -message_file "${LOG_DIR}"/"${MSG_LOG}" \
     -trace_stat \
-    -stf "${LOG_DIR}"/"${STATS_LOG}"
+    -stf "${LOG_DIR}"/"${STATS_LOG}" \
+    -trace_screen \
+    -screen_file "${LOG_DIR}"/"${SCREEN_LOG}" \
+    -timeout 10s \
+    -timeout_error \
+    &> ${NULL}
 
   return $?
 }
 
 _main() {
+  # if doesn't exist pidfile, create
+  _create_pidfile || exit 1
+
+  # execute test and return the _exec_test exit code
   _exec_test
-  return $?
+  exit_code=$?
+
+  _remove_pidfile
+  return ${exit_code}
 }
 
 # don't have arguments sufficient
@@ -60,7 +88,7 @@ while getopts "s:g:f:t:b:l:h?" ARG; do
     f) [[ -n "$OPTARG" ]] && export FROM="$OPTARG" || exit 1;;
     t) [[ -n "$OPTARG" ]] && export TO="$OPTARG" || exit 1;;
     b) [[ -n "$OPTARG" ]] && export BIND_IP="$OPTARG" || exit 1;;
-    l) [[ -n "$OPTARG" ]] && export LOG_DIR="$OPTARG";;
+    l) [[ -n "$OPTARG" ]] && export LOG_DIR="$OPTARG" || LOG_DIR="/var/log/test-sip-calls/";;
     h | \?) _help;;
   esac
 done
@@ -68,7 +96,6 @@ done
 # sipp is available?
 [[ -f "${SIPP}" ]] || exit 1
 # if doesn't exist directory, create
-[[ -z "$LOG_DIR" ]] && LOG_DIR="/var/log/test-sip-calls"
 [[ -d "${LOG_DIR}" ]] || mkdir -p "${LOG_DIR}"
 
 _main || exit 1
