@@ -55,7 +55,7 @@ _exec_test() {
   ${SIPP} \
     "${GATEWAY}" \
     -aa \
-    -d 30 \
+    -d 10000 \
     -r 1 \
     -rp 1s \
     -sf "${SCENARIO}" \
